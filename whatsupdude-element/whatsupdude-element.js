@@ -1,6 +1,6 @@
 import {LitElement, html, css} from 'lit-element';
 
-export class %%PascalCase%%Element extends LitElement {
+export class WhatsupDudeElement extends LitElement {
 
     static get styles() {
         const style = css`
@@ -20,7 +20,7 @@ export class %%PascalCase%%Element extends LitElement {
     
     constructor() {
         super();
-        this.name = "%%PascalCase%%";
+        this.name = "WhatsupDude";
     }
 
 
@@ -30,4 +30,4 @@ export class %%PascalCase%%Element extends LitElement {
         `;
     }
 }
-customElements.define('%%kebap-case%%-element', %%PascalCase%%Element);
+customElements.define('whatsupdude-element', WhatsupDudeElement);

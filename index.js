@@ -3,7 +3,6 @@ const help = require('./Help');
 const app = require('./Application');
 
 const cliArgs = process.argv;
-console.log(process.argv);
 
 if (cliArgs.length < 3) {
     console.log(help.displayHelp());
