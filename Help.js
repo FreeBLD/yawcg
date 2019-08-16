@@ -12,6 +12,7 @@ module.exports = class Help {
             -compile
                 -app        --- Compile Entire App to dist Folder
                 -component  --- Compile the Specified Component to a Web Components Conforming Component
+                    -jsver  --- Target Javascript version to compile to
         `;
     }
 }

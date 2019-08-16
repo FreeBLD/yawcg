@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jest"
   },
+  "bin": {
+	"yaleg": "./index.js"
+  },
   "keywords": ["polymerjs", "litElement", "lit-html", "Web Components"],
   "author": "Cristian Pogolsha",
   "license": "ISC",

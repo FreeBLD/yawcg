@@ -39,8 +39,8 @@ module.exports = class Application {
     }
 
     static generateNewComponent(name) {
-        const pascalCase = this.convertToPascalCase(name);
         const litElementTemplate = fs.readFileSync(path.join(__dirname, '/templates/litElementComponent.txt'), {encoding: "utf-8"});
+        const pascalCase = this.firstToUpperCase(name);
         const litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
@@ -60,7 +60,7 @@ module.exports = class Application {
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static convertToPascalCase(stringToConvert) {
+    static firstToUpperCase(stringToConvert) {
         return stringToConvert[0].toUpperCase() + stringToConvert.substring(1, stringToConvert.length);
     }
 
@@ -70,7 +70,7 @@ module.exports = class Application {
     }
 
     static trimComponentName(componentName) {
-        let regex = new RegExp('Component|Element|-element|-component|', 'g');
-        let trimmedName = componentName.replace(regex, "");
+        let regex = new RegExp('Component|Element|-element|-component|-', 'g');
+        return componentName.replace(regex, "");
     }
 }
