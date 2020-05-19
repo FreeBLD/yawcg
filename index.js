@@ -12,7 +12,11 @@ if (cliArgs.length < 3) {
             if (cliArgs[3] === 'app') {
                 app.createNewApplication(cliArgs[4]);
             } else if (cliArgs[3] === 'component') {
-                app.createNewComponent(cliArgs[4]);
+                if (cliArgs[4] == '-t') {
+                    app.createNewComponentFromType(cliArgs[6], cliArgs[5])
+                } else {
+                    app.createNewComponent(cliArgs[4]);
+                }
             }
         break;
         case 'compile':
