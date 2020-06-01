@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-const help = require('./Help');
-const app = require('./Application');
+import { Help as help }  from './Help/Help';
+import { Application as app } from './Application/Application';
 
 const cliArgs = process.argv;
 

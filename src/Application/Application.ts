@@ -1,13 +1,16 @@
-const fs = require('fs');
-const path = require('path');
+//TODO: Convert to Typescript
+import * as path from 'path';
+import * as fs from 'fs';
 
-module.exports = class Application {
+export class Application {
 
-    constructor(name) {
+    _name: string;
+
+    constructor(name:string) {
         this._name = name;
     }
 
-    static createNewApplication(name) {
+    static createNewApplication(name: string) {
         const templateName = 'my-element';
         fs.mkdirSync(`./${name}/src/my-element/`, {recursive: true});
         console.log(`Creating App Folder on Path ${__dirname}/${name}`)
@@ -16,7 +19,7 @@ module.exports = class Application {
         fs.writeFileSync(path.resolve("./${name}/src/${templateName}/", templateName+".js"), this.createNewComponent(templateName));
     }
 
-    static createNewComponent(name) {
+    static createNewComponent(name: string) {
         let trimmedName = this.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
@@ -29,14 +32,14 @@ module.exports = class Application {
         fs.writeFileSync(`${newFolderName}/${newFileName}.test.js`, this.generateNewTestCase(trimmedName));
     }
 
-    static createNewComponentFromType(name, type) {
+    static createNewComponentFromType(name: string, type: string) {
         let trimmedName = this.trimComponentName(name);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
         const newFolderName = `${path.resolve("./", newFileName)}`;
         try {
             fs.existsSync(newFolderName);
         } catch (error) {
-            throw new Error('Folder Already Exists', error);
+            throw new Error(`Folder Already Exists ${error}`);
         }
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName);
@@ -70,16 +73,16 @@ module.exports = class Application {
         }
     }
 
-    static compileComponent(pathToComponent) {
+    static compileComponent(pathToComponent: string) {
         console.log(pathToComponent);
         console.log("Not Yet Implemented");
     }
 
-    static compilerApp() {
+    static compileApp() {
         console.log('Not Yet Implemented');
     }
 
-    static generateNewComponent(name) {
+    static generateNewComponent(name: string) {
         const litElementTemplate = fs.readFileSync(path.join(__dirname, '/templates/litElementComponent.txt'), {encoding: "utf-8"});
         const pascalCase = this.firstToUpperCase(name);
         const camelCase = this.firstToLowerCase(name);
@@ -88,41 +91,41 @@ module.exports = class Application {
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static generateNewTestCase(name) {
+    static generateNewTestCase(name:string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
         const testTemplate = fs.readFileSync(path.join(__dirname, '/templates/jestTestCase.txt'), {encoding: "utf-8"});
         const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static generateNewTestCaseFromTemplate(name, templateURL) {
+    static generateNewTestCaseFromTemplate(name:string, templateURL:string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
         const testTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static generateNewComponentFromTemplate(name, templateURL) {
+    static generateNewComponentFromTemplate(name:string, templateURL:string) {
         let pascalCase = name[0].toUpperCase() + name.substring(1, name.length);
         const litElementTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static firstToUpperCase(stringToConvert) {
+    static firstToUpperCase(stringToConvert:string) {
         return stringToConvert[0].toUpperCase() + stringToConvert.substring(1, stringToConvert.length);
     }
 
-    static firstToLowerCase(stringToConvert) {
+    static firstToLowerCase(stringToConvert:string) {
         return stringToConvert[0].toLowerCase();
     }
 
-    static convertToKebapCase(stringToConvert) {
+    static convertToKebapCase(stringToConvert:string) {
         const regexp = /_([a-z])/g;
         return regexp.exec(stringToConvert);
     }
 
-    static trimComponentName(componentName) {
+    static trimComponentName(componentName:string) {
         let regex = new RegExp('Component|Element|-element|-component|-', 'g');
         return componentName.replace(regex, "");
     }

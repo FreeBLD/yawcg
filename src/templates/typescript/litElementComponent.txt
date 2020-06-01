@@ -20,7 +20,7 @@ export class %%PascalCase%%Element extends LitElement {
 
     render() {
         return html`
-            <h1>${this.name} Works!</h1>
+            <h1>${this.name} <span class=".blink">Works!</span></h1>
         `;
     }
     
@@ -29,6 +29,14 @@ export class %%PascalCase%%Element extends LitElement {
             :host {
                 color: red;
                 // create a blink css property
+            }
+            @keyframes blink {
+                from { color: red; }
+                to { color: white; }
+            }
+            .blink {
+                animation-name: blink;
+                animation-duration: 2s;
             }
         `;
         return [style];
