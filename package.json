@@ -2,13 +2,13 @@
   "name": "yawcg",
   "version": "1.0.0",
   "description": "Yet Another Web Component (litElement) Generator",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
     "dev": "webpack --env.mode development",
     "prod": "webpack --env.mode production",
     "test": "webpack-dev-server --env.mode development --config ./test/test.config.js"
   },
-  "bin": "yaleg",
+  "bin": "dist/release/main.js",
   "keywords": [
     "polymerjs",
     "litElement",

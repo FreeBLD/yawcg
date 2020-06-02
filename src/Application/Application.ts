@@ -11,7 +11,9 @@ export class Application {
 
     static createNewApplication(name: string) {
         const templateName = 'my-element';
-        const pathToComponent = path.resolve(__dirname, `${name}/src/`);
+        console.log(__dirname);
+        const pathToComponent = path.resolve('./', `${name}`, `src/`);
+        console.log(pathToComponent);
         fs.mkdirSync(pathToComponent, {recursive: true});
         console.log(`Creating App Folder on Path ${__dirname}/${name}`)
         console.log(`Creating Folder ${__dirname}/${name}/src`);
@@ -23,7 +25,7 @@ export class Application {
         let trimmedName = this.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
-        const newFolderName = `${path.resolve(pathToComponent, newFileName)}`;
+        const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName);
         console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
@@ -35,7 +37,7 @@ export class Application {
     static createNewComponentFromType(name: string, type: string) {
         let trimmedName = this.trimComponentName(name);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
-        const newFolderName = `${path.resolve("./", newFileName)}`;
+        const newFolderName = path.resolve("./", newFileName);
         try {
             fs.existsSync(newFolderName);
         } catch (error) {
@@ -49,11 +51,11 @@ export class Application {
                 console.log(`Created New Element ${newFolderName}/${newFileName}.js`);
                 fs.writeFileSync(
                     `${newFolderName}/${newFileName}.js`,
-                    this.generateNewComponentFromTemplate(trimmedName, '/templates/javascript/litElementComponent.txt'));
+                    this.generateNewComponentFromTemplate(trimmedName, '/src/templates/javascript/litElementComponent.txt'));
                 console.log(`Created New Test ${newFolderName}/${newFileName}.js`);
                 fs.writeFileSync(
                     `${newFolderName}/${newFileName}.test.js`,
-                    this.generateNewTestCaseFromTemplate(trimmedName, '/templates/javascript/jestTestCase.txt'));
+                    this.generateNewTestCaseFromTemplate(trimmedName, '/src/templates/javascript/jestTestCase.txt'));
             break;
             case 'ts':
                 // Create a separate module
@@ -62,13 +64,13 @@ export class Application {
                     `${newFolderName}/${newFileName}.ts`,
                     this.generateNewComponentFromTemplate(
                         trimmedName,
-                        '/templates/typescript/litElementComponent.txt'
+                        '/src/templates/typescript/litElementComponent.txt'
                     )
                 );
                 console.log(`Created New Test ${newFolderName}/${newFileName}.test.ts`);
                 fs.writeFileSync(
                     `${newFolderName}/${newFileName}.test.ts`,
-                    this.generateNewTestCaseFromTemplate(trimmedName, '/templates/typescript/jestTestCase.txt'));
+                    this.generateNewTestCaseFromTemplate(trimmedName, '/src/templates/typescript/jestTestCase.txt'));
             break;
         }
     }
@@ -83,7 +85,7 @@ export class Application {
     }
 
     static generateNewComponent(name: string) {
-        const litElementTemplate = fs.readFileSync(path.join(__dirname, '/templates/litElementComponent.txt'), {encoding: "utf-8"});
+        const litElementTemplate = fs.readFileSync(path.join(__dirname, '/src/templates/litElementComponent.txt'), {encoding: "utf-8"});
         const pascalCase = this.firstToUpperCase(name);
         const camelCase = this.firstToLowerCase(name);
         let litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
@@ -93,7 +95,7 @@ export class Application {
 
     static generateNewTestCase(name:string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
-        const testTemplate = fs.readFileSync(path.join(__dirname, '/templates/jestTestCase.txt'), {encoding: "utf-8"});
+        const testTemplate = fs.readFileSync(path.join(__dirname, '/src/templates/jestTestCase.txt'), {encoding: "utf-8"});
         const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }

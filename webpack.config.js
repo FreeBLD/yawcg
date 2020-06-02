@@ -3,9 +3,10 @@ const path = require('path');
 module.exports = ({ mode }) => {
     return {
         mode,
-        entry: path.join(__dirname, 'src', 'index.ts'),
+        target: 'node',
+        entry: path.join(__dirname, 'src', 'main.ts'),
         output: {
-            filename: 'index.js',
+            filename: '[name].js',
             path: path.resolve(__dirname, `dist/${mode === 'production' ? 'release' : 'debug'}`)
         },
         module: {
@@ -26,7 +27,8 @@ module.exports = ({ mode }) => {
             extensions: ['.ts', '.js']
         },
         node: {
-            fs: 'empty'
+            fs: 'empty',
+            __dirname: false
         },
         devtool: mode === 'development' ? 'source-map' : 'none',
         watchOptions: {

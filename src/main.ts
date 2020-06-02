@@ -4,6 +4,7 @@ import { Application as app } from './Application/Application';
 import * as path from 'path';
 
 const cliArgs = process.argv;
+console.log(__dirname);
 
 if (cliArgs.length < 3) {
     console.log(help.displayHelp());
