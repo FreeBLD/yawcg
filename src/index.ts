@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Help as help }  from './Help/Help';
 import { Application as app } from './Application/Application';
+import * as path from 'path';
 
 const cliArgs = process.argv;
 
@@ -15,7 +16,7 @@ if (cliArgs.length < 3) {
                 if (cliArgs[4] == '-t') {
                     app.createNewComponentFromType(cliArgs[6], cliArgs[5])
                 } else {
-                    app.createNewComponent(cliArgs[4]);
+                    app.createNewComponent(cliArgs[4], path.resolve(__dirname, './'));
                 }
             }
         break;
@@ -28,3 +29,6 @@ if (cliArgs.length < 3) {
         break;
     }
 }
+
+
+//TODO: rewrite and create a proper division into options module, subcommands module, ?commands module?

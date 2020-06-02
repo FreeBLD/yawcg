@@ -1,4 +1,3 @@
-//TODO: Convert to Typescript
 import * as path from 'path';
 import * as fs from 'fs';
 
@@ -12,24 +11,25 @@ export class Application {
 
     static createNewApplication(name: string) {
         const templateName = 'my-element';
-        fs.mkdirSync(`./${name}/src/my-element/`, {recursive: true});
+        const pathToComponent = path.resolve(__dirname, `${name}/src/`);
+        fs.mkdirSync(pathToComponent, {recursive: true});
         console.log(`Creating App Folder on Path ${__dirname}/${name}`)
         console.log(`Creating Folder ${__dirname}/${name}/src`);
         console.log(`Creating Folder ${__dirname}/${name}/src/my-element`);
-        fs.writeFileSync(path.resolve("./${name}/src/${templateName}/", templateName+".js"), this.createNewComponent(templateName));
+        this.createNewComponent(templateName, pathToComponent);
     }
 
-    static createNewComponent(name: string) {
+    static createNewComponent(name: string, pathToComponent: string) {
         let trimmedName = this.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
-        const newFolderName = `${path.resolve("./", newFileName)}`;
+        const newFolderName = `${path.resolve(pathToComponent, newFileName)}`;
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName);
-        console.log(`Created New Element ${newFolderName}/${newFileName}.js`);
-        fs.writeFileSync(`${newFolderName}/${newFileName}.js`, this.generateNewComponent(trimmedName));
-        console.log(`Created New Test ${newFolderName}/${newFileName}.js`);
-        fs.writeFileSync(`${newFolderName}/${newFileName}.test.js`, this.generateNewTestCase(trimmedName));
+        console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
+        fs.writeFileSync(`${newFolderName}/${newFileName}.ts`, this.generateNewComponent(trimmedName));
+        console.log(`Created New Test ${newFolderName}/${newFileName}.ts`);
+        fs.writeFileSync(`${newFolderName}/${newFileName}.test.ts`, this.generateNewTestCase(trimmedName));
     }
 
     static createNewComponentFromType(name: string, type: string) {

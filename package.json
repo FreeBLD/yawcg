@@ -8,6 +8,7 @@
     "prod": "webpack --env.mode production",
     "test": "webpack-dev-server --env.mode development --config ./test/test.config.js"
   },
+  "bin": "yaleg",
   "keywords": [
     "polymerjs",
     "litElement",

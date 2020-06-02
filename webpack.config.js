@@ -6,7 +6,7 @@ module.exports = ({ mode }) => {
         entry: path.join(__dirname, 'src', 'index.ts'),
         output: {
             filename: 'index.js',
-            path: path.resolve(__dirname, `dist/${mode === 'development' ? 'release' : 'debug'}`)
+            path: path.resolve(__dirname, `dist/${mode === 'production' ? 'release' : 'debug'}`)
         },
         module: {
             rules: [
@@ -24,6 +24,9 @@ module.exports = ({ mode }) => {
         },
         resolve: {
             extensions: ['.ts', '.js']
+        },
+        node: {
+            fs: 'empty'
         },
         devtool: mode === 'development' ? 'source-map' : 'none',
         watchOptions: {
