@@ -1,14 +1,12 @@
 // This is a webpack style config file for unit testing using mocha
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const WebpackShellPlugin = require('webpack-shell-plugin');
 const path = require('path');
  
 module.exports = ({ mode }) => {
     return {
         mode,
-        entry: path.resolve(__dirname, '.', 'all.tests.js'),
+        entry: path.resolve(__dirname, '.', 'tests.js'),
         output: {
             path: path.join(__dirname, '/build'),
             filename: '[name].bundle.js',
@@ -49,6 +47,10 @@ module.exports = ({ mode }) => {
         devtool: mode === 'development' ? 'source-map' : 'none',
         watchOptions: {
             ignored: /node_modules/
+        },
+        node: {
+            fs: 'empty',
+            __dirname: false
         },
         devServer: {
             contentBase: path.join(__dirname, '/build'),

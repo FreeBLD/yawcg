@@ -1,5 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
+import LitElementTemplate from '../templates/typescript/LitElementTemplate';
+import MochaTestCaseTemplate from '../templates/typescript/MochaTestCaseTemplate';
 
 export class Application {
 
@@ -75,28 +77,21 @@ export class Application {
         }
     }
 
-    static compileComponent(pathToComponent: string) {
-        console.log(pathToComponent);
-        console.log("Not Yet Implemented");
-    }
-
-    static compileApp() {
-        console.log('Not Yet Implemented');
-    }
-
     static generateNewComponent(name: string) {
-        const litElementTemplate = fs.readFileSync(path.join(__dirname, '/src/templates/litElementComponent.txt'), {encoding: "utf-8"});
+        const elementTemplate = new LitElementTemplate().renderTypescriptTemplate().replace(/\s{4}/g, '');
         const pascalCase = this.firstToUpperCase(name);
         const camelCase = this.firstToLowerCase(name);
-        let litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
+        let litElementComponent = elementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         litElementComponent = litElementComponent.replace(/%%camelCase%%/g, camelCase);
+        litElementComponent = litElementComponent.replace(/\\/g, '');
+        console.log(litElementComponent);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
     static generateNewTestCase(name:string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
-        const testTemplate = fs.readFileSync(path.join(__dirname, '/src/templates/jestTestCase.txt'), {encoding: "utf-8"});
-        const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
+        const testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
+        const testBuffer = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
@@ -119,7 +114,7 @@ export class Application {
     }
 
     static firstToLowerCase(stringToConvert:string) {
-        return stringToConvert[0].toLowerCase();
+        return stringToConvert[0].toLowerCase() + stringToConvert.substring(1, stringToConvert.length);
     }
 
     static convertToKebapCase(stringToConvert:string) {

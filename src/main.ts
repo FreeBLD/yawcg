@@ -21,12 +21,7 @@ if (cliArgs.length < 3) {
                 }
             }
         break;
-        case 'compile':
-            if (cliArgs[3] === 'app') {
-                app.compileApp();
-            } else {
-                app.compileComponent(cliArgs[3]);
-            }
+        default:
         break;
     }
 }
