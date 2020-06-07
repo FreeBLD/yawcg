@@ -7,7 +7,7 @@ export class Application {
 
     _name: string;
 
-    constructor(name:string) {
+    constructor(name: string) {
         this._name = name;
     }
 
@@ -27,6 +27,7 @@ export class Application {
         let trimmedName = this.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
+        pathToComponent = !!pathToComponent ? pathToComponent : __dirname;
         const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName);
@@ -78,51 +79,62 @@ export class Application {
     }
 
     static generateNewComponent(name: string) {
-        const elementTemplate = new LitElementTemplate().renderTypescriptTemplate().replace(/\s{4}/g, '');
+        let elementTemplate = new LitElementTemplate().renderTypescriptTemplate().replace(/^(?:    ){3}/gm, '');
+        elementTemplate = elementTemplate.replace(/\n/, '');
         const pascalCase = this.firstToUpperCase(name);
         const camelCase = this.firstToLowerCase(name);
+        const kebapCase = this.convertToKebapCase(name);
         let litElementComponent = elementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         litElementComponent = litElementComponent.replace(/%%camelCase%%/g, camelCase);
         litElementComponent = litElementComponent.replace(/\\/g, '');
         console.log(litElementComponent);
-        return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
+        return litElementComponent.replace(/%%kebap-case%%/g, kebapCase);
     }
 
-    static generateNewTestCase(name:string) {
+    static generateNewTestCase(name: string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
         const testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
         const testBuffer = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static generateNewTestCaseFromTemplate(name:string, templateURL:string) {
+    static generateNewTestCaseFromTemplate(name: string, templateURL: string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
         const testTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static generateNewComponentFromTemplate(name:string, templateURL:string) {
+    static generateNewComponentFromTemplate(name: string, templateURL: string) {
         let pascalCase = name[0].toUpperCase() + name.substring(1, name.length);
         const litElementTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
-    static firstToUpperCase(stringToConvert:string) {
+    static firstToUpperCase(stringToConvert: string) {
         return stringToConvert[0].toUpperCase() + stringToConvert.substring(1, stringToConvert.length);
     }
 
-    static firstToLowerCase(stringToConvert:string) {
+    static firstToLowerCase(stringToConvert: string) {
         return stringToConvert[0].toLowerCase() + stringToConvert.substring(1, stringToConvert.length);
     }
 
-    static convertToKebapCase(stringToConvert:string) {
-        const regexp = /_([a-z])/g;
-        return regexp.exec(stringToConvert);
+    static convertToKebapCase(stringToConvert: string) {
+        const result: string = stringToConvert.replace(/[A-Za-z][a-z]+/g, (fragment: string) => {
+            return `-${fragment.toLowerCase()}`;
+        });
+        return result.slice(1, result.length);
     }
 
-    static trimComponentName(componentName:string) {
+    static convertToSnakeCase(stringToConvert: string) {
+        const result: string = stringToConvert.replace(/[A-Za-z][a-z]+/g, (fragment: string) => {
+            return `_${fragment.toLowerCase()}`;
+        });
+        return result.slice(1, result.length);
+    }
+
+    static trimComponentName(componentName: string) {
         let regex = new RegExp('Component|Element|-element|-component|-', 'g');
         return componentName.replace(regex, "");
     }

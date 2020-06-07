@@ -48,7 +48,7 @@ class LitElementTemplate {
                     return [style];
                 }
             }
-        `
+        `;
     }
 }
 
