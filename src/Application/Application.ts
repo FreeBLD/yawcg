@@ -23,11 +23,11 @@ export class Application {
         this.createNewComponent(templateName, pathToComponent);
     }
 
-    static createNewComponent(name: string, pathToComponent: string) {
+    static createNewComponent(name: string, pathToComponent?: string) {
         let trimmedName = this.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
-        pathToComponent = !!pathToComponent ? pathToComponent : __dirname;
+        pathToComponent = !!pathToComponent ? pathToComponent : process.cwd();
         const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName);
@@ -87,13 +87,13 @@ export class Application {
         let litElementComponent = elementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         litElementComponent = litElementComponent.replace(/%%camelCase%%/g, camelCase);
         litElementComponent = litElementComponent.replace(/\\/g, '');
-        console.log(litElementComponent);
         return litElementComponent.replace(/%%kebap-case%%/g, kebapCase);
     }
 
     static generateNewTestCase(name: string) {
         let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
-        const testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
+        let testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
+        testCaseTemplate = testCaseTemplate.replace(/^(?:    ){3}/gm, '');
         const testBuffer = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }

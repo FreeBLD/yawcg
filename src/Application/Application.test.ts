@@ -1,5 +1,7 @@
 import  { Application } from "./Application";
 import * as assert from "assert";
+import * as fs from "fs";
+import * as path from "path";
 
 let application: Application;
 
@@ -98,5 +100,11 @@ describe("Test Case for the Application Class", () => {
         span.innerHTML = Application.generateNewComponent('foobar');
         document.body.appendChild(span);
         assert.deepStrictEqual(Application.generateNewComponent('foobar'), foobarClassTemplate.replace(/^(?:    ){3}/gm, ''));
+    });
+
+    xit("should create a folder with a new component in current working directory if path not supplied", () => {
+        Application.createNewComponent('shit');
+        const folderIsCreated: boolean = fs.existsSync(path.resolve(__dirname, 'shit'));
+        assert.strictEqual(folderIsCreated, true);
     });
 });

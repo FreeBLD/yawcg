@@ -17,7 +17,7 @@ if (cliArgs.length < 3) {
                 if (cliArgs[4] == '-t') {
                     app.createNewComponentFromType(cliArgs[6], cliArgs[5])
                 } else {
-                    app.createNewComponent(cliArgs[4], path.resolve(__dirname, './'));
+                    app.createNewComponent(cliArgs[4], cliArgs[5]);
                 }
             }
         break;
