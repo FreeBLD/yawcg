@@ -4,7 +4,7 @@ Yet Another LitElement Generator
 There was a namechange. As the application generates components and template apps based on the litLement library from
 Polymerjs™ project, it would be more appropriate to rename it. 
 
-# What is yawcg
+# What is yaleg
 As the name implies, this tool is meant to be a cli quick project generator using the litElement library from Google™
 á la angular-cli from the angular team.
 
