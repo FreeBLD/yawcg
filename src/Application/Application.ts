@@ -2,6 +2,7 @@ import * as path from 'path';
 import * as fs from 'fs';
 import LitElementTemplate from '../templates/typescript/LitElementTemplate';
 import MochaTestCaseTemplate from '../templates/typescript/MochaTestCaseTemplate';
+import Utils from '../Utils/Utils';
 
 export class Application {
 
@@ -24,7 +25,7 @@ export class Application {
     }
 
     static createNewComponent(name: string, pathToComponent?: string) {
-        let trimmedName = this.trimComponentName(name);
+        let trimmedName = Utils.trimComponentName(name);
         console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
         pathToComponent = !!pathToComponent ? pathToComponent : process.cwd();
@@ -43,9 +44,9 @@ export class Application {
         let elementTemplate = new LitElementTemplate().renderTypescriptTemplate()
         elementTemplate = elementTemplate.replace(/^(?:    ){3}/gm, '');
         elementTemplate = elementTemplate.replace(/\n/, '');
-        const pascalCase = this.firstToUpperCase(name);
-        const camelCase = this.firstToLowerCase(name);
-        const kebapCase = this.convertToKebapCase(name);
+        const pascalCase = Utils.firstToUpperCase(name);
+        const camelCase = Utils.firstToLowerCase(name);
+        const kebapCase = Utils.convertToKebapCase(name);
         let litElementComponent = elementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         litElementComponent = litElementComponent.replace(/%%camelCase%%/g, camelCase);
         litElementComponent = litElementComponent.replace(/\\/g, '');
@@ -53,9 +54,9 @@ export class Application {
     }
 
     static generateNewTestCase(name: string) {
-        const pascalCase = this.firstToUpperCase(name);
-        const camelCase = this.firstToLowerCase(name);
-        const kebapCase = this.convertToKebapCase(name);
+        const pascalCase = Utils.firstToUpperCase(name);
+        const camelCase = Utils.firstToLowerCase(name);
+        const kebapCase = Utils.convertToKebapCase(name);
         let testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
         testCaseTemplate = testCaseTemplate.replace(/^(?:    ){3}/gm, '');
         testCaseTemplate = testCaseTemplate.replace(/\n/, '');
@@ -76,32 +77,5 @@ export class Application {
         const litElementTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());
-    }
-
-    static firstToUpperCase(stringToConvert: string) {
-        return stringToConvert[0].toUpperCase() + stringToConvert.substring(1, stringToConvert.length);
-    }
-
-    static firstToLowerCase(stringToConvert: string) {
-        return stringToConvert[0].toLowerCase() + stringToConvert.substring(1, stringToConvert.length);
-    }
-
-    static convertToKebapCase(stringToConvert: string) {
-        const result: string = stringToConvert.replace(/[A-Za-z][a-z]+/g, (fragment: string) => {
-            return `-${fragment.toLowerCase()}`;
-        });
-        return result.slice(1, result.length);
-    }
-
-    static convertToSnakeCase(stringToConvert: string) {
-        const result: string = stringToConvert.replace(/[A-Za-z][a-z]+/g, (fragment: string) => {
-            return `_${fragment.toLowerCase()}`;
-        });
-        return result.slice(1, result.length);
-    }
-
-    static trimComponentName(componentName: string) {
-        let regex = new RegExp('Component|Element|-element|-component|-', 'g');
-        return componentName.replace(regex, "");
     }
 }

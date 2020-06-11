@@ -62,6 +62,9 @@ module.exports = ({ mode }) => {
         },
         optimization: {
             minimize: mode === 'production' ? true : false,
+            splitChunks: {
+                chunks: 'all'
+            }
         }
     };
 };

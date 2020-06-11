@@ -6,7 +6,7 @@ module.exports = ({ mode }) => {
         target: 'node',
         entry: path.join(__dirname, 'src', 'main.ts'),
         output: {
-            filename: '[name].js',
+            filename: 'yaleg.js',
             path: path.resolve(__dirname, `dist/${mode === 'production' ? 'release' : 'debug'}`)
         },
         module: {
