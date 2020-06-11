@@ -1,6 +1,7 @@
 {
     "compilerOptions": {
         "esModuleInterop": true,
+        "noImplicitAny": true,
         "module": "CommonJS",
         "target": "ES2015",
         "allowJs": true,

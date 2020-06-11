@@ -1,6 +1,7 @@
 import Utils from "./Utils";
 import assert from 'assert';
 
+
 describe('Test Case for the Utils Class', () => {
     it("firstToLowerCase() should return first 'Test' as 'test'", () => {
         assert.strictEqual(Utils.firstToLowerCase("Test"), 'test');
