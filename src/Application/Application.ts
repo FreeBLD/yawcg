@@ -30,56 +30,18 @@ export class Application {
         pathToComponent = !!pathToComponent ? pathToComponent : process.cwd();
         const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
-        fs.mkdirSync(newFolderName);
+        console.log(pathToComponent);
+        console.log(process.cwd());
+        fs.mkdirSync(newFolderName, {recursive: true});
         console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
         fs.writeFileSync(`${newFolderName}/${newFileName}.ts`, this.generateNewComponent(trimmedName));
         console.log(`Created New Test ${newFolderName}/${newFileName}.ts`);
         fs.writeFileSync(`${newFolderName}/${newFileName}.test.ts`, this.generateNewTestCase(trimmedName));
     }
 
-    static createNewComponentFromType(name: string, type: string) {
-        let trimmedName = this.trimComponentName(name);
-        const newFileName = `${trimmedName.toLowerCase()}-element`;
-        const newFolderName = path.resolve("./", newFileName);
-        try {
-            fs.existsSync(newFolderName);
-        } catch (error) {
-            throw new Error(`Folder Already Exists ${error}`);
-        }
-        console.log(`Created New Folder ${newFolderName}`);
-        fs.mkdirSync(newFolderName);
-        switch(type) {
-            case 'js':
-                // Create a separate module
-                console.log(`Created New Element ${newFolderName}/${newFileName}.js`);
-                fs.writeFileSync(
-                    `${newFolderName}/${newFileName}.js`,
-                    this.generateNewComponentFromTemplate(trimmedName, '/src/templates/javascript/litElementComponent.txt'));
-                console.log(`Created New Test ${newFolderName}/${newFileName}.js`);
-                fs.writeFileSync(
-                    `${newFolderName}/${newFileName}.test.js`,
-                    this.generateNewTestCaseFromTemplate(trimmedName, '/src/templates/javascript/jestTestCase.txt'));
-            break;
-            case 'ts':
-                // Create a separate module
-                console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
-                fs.writeFileSync(
-                    `${newFolderName}/${newFileName}.ts`,
-                    this.generateNewComponentFromTemplate(
-                        trimmedName,
-                        '/src/templates/typescript/litElementComponent.txt'
-                    )
-                );
-                console.log(`Created New Test ${newFolderName}/${newFileName}.test.ts`);
-                fs.writeFileSync(
-                    `${newFolderName}/${newFileName}.test.ts`,
-                    this.generateNewTestCaseFromTemplate(trimmedName, '/src/templates/typescript/jestTestCase.txt'));
-            break;
-        }
-    }
-
     static generateNewComponent(name: string) {
-        let elementTemplate = new LitElementTemplate().renderTypescriptTemplate().replace(/^(?:    ){3}/gm, '');
+        let elementTemplate = new LitElementTemplate().renderTypescriptTemplate()
+        elementTemplate = elementTemplate.replace(/^(?:    ){3}/gm, '');
         elementTemplate = elementTemplate.replace(/\n/, '');
         const pascalCase = this.firstToUpperCase(name);
         const camelCase = this.firstToLowerCase(name);
@@ -91,11 +53,15 @@ export class Application {
     }
 
     static generateNewTestCase(name: string) {
-        let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
+        const pascalCase = this.firstToUpperCase(name);
+        const camelCase = this.firstToLowerCase(name);
+        const kebapCase = this.convertToKebapCase(name);
         let testCaseTemplate = new MochaTestCaseTemplate().renderTestCaseTemplate();
         testCaseTemplate = testCaseTemplate.replace(/^(?:    ){3}/gm, '');
-        const testBuffer = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
-        return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
+        testCaseTemplate = testCaseTemplate.replace(/\n/, '');
+        testCaseTemplate = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
+        testCaseTemplate = testCaseTemplate.replace(/%%camelCase%%/g, camelCase)
+        return testCaseTemplate.replace(/%%kebap-case%%/g, kebapCase);
     }
 
     static generateNewTestCaseFromTemplate(name: string, templateURL: string) {

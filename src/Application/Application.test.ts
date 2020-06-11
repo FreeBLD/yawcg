@@ -95,16 +95,15 @@ describe("Test Case for the Application Class", () => {
     });
 
     it("should return a new Template from a preset in-class template called 'foobar'", () => {
-        console.log(Application.generateNewComponent('foobar'));
-        const span: HTMLSpanElement = document.createElement('span');
-        span.innerHTML = Application.generateNewComponent('foobar');
-        document.body.appendChild(span);
         assert.deepStrictEqual(Application.generateNewComponent('foobar'), foobarClassTemplate.replace(/^(?:    ){3}/gm, ''));
     });
 
-    xit("should create a folder with a new component in current working directory if path not supplied", () => {
-        Application.createNewComponent('shit');
-        const folderIsCreated: boolean = fs.existsSync(path.resolve(__dirname, 'shit'));
+    it("should create a folder with a new component named 'baz' in current working directory if path not supplied", () => {
+        Application.createNewComponent('baz');
+        console.log(__dirname);
+
+        console.log(process.cwd());
+        const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'baz'));
         assert.strictEqual(folderIsCreated, true);
     });
 });

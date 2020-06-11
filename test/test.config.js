@@ -1,20 +1,26 @@
 // This is a webpack style config file for unit testing using mocha
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+//const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const WebpackShellPlugin = require('webpack-shell-plugin');
+const nodeExternals = require('webpack-node-externals');
 const path = require('path');
  
+const buildPath = path.join(__dirname, '/build');
+
 module.exports = ({ mode }) => {
     return {
         mode,
+        target: 'node',
+        externals: [nodeExternals()],
         entry: path.resolve(__dirname, '.', 'tests.js'),
         output: {
-            path: path.join(__dirname, '/build'),
-            filename: '[name].bundle.js',
+            path: buildPath,
+            filename: 'tests.bundle.js',
         },
         plugins: [
             new CleanWebpackPlugin(),
-            new HtmlWebpackPlugin({
-                template: path.resolve(__dirname, '.', 'test.html')
+            new WebpackShellPlugin({
+                onBuildExit: `npx mocha --colors ${buildPath}/tests.bundle.js`
             })
         ],
         module: {
@@ -25,13 +31,8 @@ module.exports = ({ mode }) => {
                 exclude: /node_modules/
             },
             {
-                test: /\.test\.js$/,
-                use: 'mocha-loader',
-                exclude: /node_modules/
-            },
-            {
                 test: /\.test\.ts$/,
-                use: [ 'mocha-loader', 'ts-loader' ],
+                use: 'ts-loader',
                 exclude: /node_modules/
             },
             { 
@@ -53,7 +54,7 @@ module.exports = ({ mode }) => {
             __dirname: false
         },
         devServer: {
-            contentBase: path.join(__dirname, '/build'),
+            contentBase: buildPath,
             compress: true,
             port: 9010,
             inline: true,
