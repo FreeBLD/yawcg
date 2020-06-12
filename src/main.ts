@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 import { Help as help }  from './Help/Help';
 import { Application as app } from './Application/Application';
 

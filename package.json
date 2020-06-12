@@ -1,15 +1,23 @@
 {
-  "name": "yawcg",
-  "version": "1.0.0",
-  "description": "Yet Another Web Component (litElement) Generator",
-  "main": "main.js",
+  "name": "@cpa30/yaleg",
+  "version": "0.0.1",
+  "description": "Yet Another litElement Generator",
+  "main": "yaleg.js",
   "scripts": {
     "dev": "webpack --env.mode development",
     "prod": "webpack --env.mode production",
     "test": "webpack-dev-server --env.mode development --config ./test/test.config.js",
     "testCompile": "webpack --watch --progress --env.mode development --config ./test/test.config.js"
   },
-  "bin": "dist/release/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FreeBLD/yawcg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/FreeBLD/yawcg/issues"
+  },
+  "homepage": "https://github.com/FreeBLD/yawcg#readme",
+  "bin": "dist/release/yaleg.js",
   "keywords": [
     "polymerjs",
     "litElement",
@@ -19,15 +27,11 @@
   "author": "Cristian Pogolsha",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^25.2.3",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.6",
     "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^6.0.2",
-    "html-webpack-plugin": "^4.3.0",
     "mocha": "^7.2.0",
     "mocha-loader": "^5.0.0",
-    "shebang-loader": "0.0.1",
     "source-map-loader": "^1.0.0",
     "ts-loader": "^7.0.4",
     "typescript": "^3.9.2",

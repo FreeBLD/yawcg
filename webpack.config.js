@@ -1,4 +1,6 @@
 const path = require('path');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = ({ mode }) => {
     return {
@@ -9,11 +11,16 @@ module.exports = ({ mode }) => {
             filename: 'yaleg.js',
             path: path.resolve(__dirname, `dist/${mode === 'production' ? 'release' : 'debug'}`)
         },
+        plugins: [
+            new CleanWebpackPlugin(),
+            new webpack.BannerPlugin({ banner: '#!/usr/bin/env node', raw: true })
+
+        ],
         module: {
             rules: [
                 {
                     test: /\.ts$/,
-                    use: ['ts-loader', 'shebang-loader'],
+                    use: 'ts-loader',
                     exclude: /node_modules/
                 },
                 {
