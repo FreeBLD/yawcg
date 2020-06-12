@@ -1,6 +1,6 @@
 {
   "name": "@cpa30/yaleg",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Yet Another litElement Generator",
   "main": "yaleg.js",
   "scripts": {
