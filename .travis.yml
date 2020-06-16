@@ -1,0 +1,5 @@
+deploy:
+  provider: npm
+  api_key: ""
+  on:
+    - tags: true

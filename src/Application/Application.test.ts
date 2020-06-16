@@ -73,4 +73,9 @@ describe("Test Case for the Application Class", () => {
         const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'baz'));
         assert.strictEqual(folderIsCreated, true);
     });
+
+    it('should fetch the template repo from upstream', async() => {
+        const repo = await Application.fetchTemplateProjectFromRepo();
+        assert.notStrictEqual(repo, null);
+    });
 });

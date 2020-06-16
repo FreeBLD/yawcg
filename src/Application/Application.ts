@@ -3,6 +3,8 @@ import * as fs from 'fs';
 import LitElementTemplate from '../templates/typescript/LitElementTemplate';
 import MochaTestCaseTemplate from '../templates/typescript/MochaTestCaseTemplate';
 import Utils from '../Utils/Utils';
+import ConfigTemplates from '../templates/config/ConfigTemplates';
+import https from 'https';
 
 export class Application {
 
@@ -18,21 +20,40 @@ export class Application {
         const pathToComponent = path.resolve('./', `${name}`, `src/`);
         console.log(pathToComponent);
         fs.mkdirSync(pathToComponent, {recursive: true});
-        console.log(`Creating App Folder on Path ${__dirname}/${name}`)
+        console.log(`Creating App Folder on Path ${__dirname}/${name}`);
         console.log(`Creating Folder ${__dirname}/${name}/src`);
         console.log(`Creating Folder ${__dirname}/${name}/src/my-element`);
         this.createNewComponent(templateName, pathToComponent);
+        console.log(`Creating Folder ${__dirname}/${name}/test`);
+        const testFolderPath = path.resolve('./', `${name}`, `test/`);
+        this.createConfigurationFiles(testFolderPath);
+    }
+
+    static fetchTemplateProjectFromRepo() {
+        https.get('https://github.com/FreeBLD/lit-element-template/archive/typescript.zip', (res) => {
+            console.log(res);
+            const repo = res.on('data', (payload) => {
+                console.log(payload);
+                return payload;
+            });
+        });
+    }
+
+    static createConfigurationFiles(path: string): void {
+        fs.mkdirSync(path, {recursive: true});
+        const config = new ConfigTemplates();
+        let bundler = config.getDefaultWebpackTemplate();
+        fs.writeFileSync(`${path}/webpack.config.js`, bundler);
+        let compiler = config.getDefaultWebpackTemplate();
+        fs.writeFileSync(`${path}/tsconfig.json`, compiler);
     }
 
     static createNewComponent(name: string, pathToComponent?: string) {
         let trimmedName = Utils.trimComponentName(name);
-        console.log(trimmedName);
         const newFileName = `${trimmedName.toLowerCase()}-element`;
         pathToComponent = !!pathToComponent ? pathToComponent : process.cwd();
         const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
-        console.log(pathToComponent);
-        console.log(process.cwd());
         fs.mkdirSync(newFolderName, {recursive: true});
         console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
         fs.writeFileSync(`${newFolderName}/${newFileName}.ts`, this.generateNewComponent(trimmedName));
@@ -41,7 +62,7 @@ export class Application {
     }
 
     static generateNewComponent(name: string) {
-        let elementTemplate = new LitElementTemplate().renderTypescriptTemplate()
+        let elementTemplate = new LitElementTemplate().renderTypescriptTemplate();
         elementTemplate = elementTemplate.replace(/^(?:    ){3}/gm, '');
         elementTemplate = elementTemplate.replace(/\n/, '');
         const pascalCase = Utils.firstToUpperCase(name);
@@ -61,19 +82,19 @@ export class Application {
         testCaseTemplate = testCaseTemplate.replace(/^(?:    ){3}/gm, '');
         testCaseTemplate = testCaseTemplate.replace(/\n/, '');
         testCaseTemplate = testCaseTemplate.replace(/%%PascalCase%%/g, pascalCase);
-        testCaseTemplate = testCaseTemplate.replace(/%%camelCase%%/g, camelCase)
+        testCaseTemplate = testCaseTemplate.replace(/%%camelCase%%/g, camelCase);
         return testCaseTemplate.replace(/%%kebap-case%%/g, kebapCase);
     }
 
     static generateNewTestCaseFromTemplate(name: string, templateURL: string) {
-        let pascalCase = `${name[0].toUpperCase()}${name.substring(1, name.length)}`;
+        let pascalCase = Utils.firstToUpperCase(name);
         const testTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const testBuffer = testTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return testBuffer.replace(/%%kebap-case%%/g, name.toLowerCase());
     }
 
     static generateNewComponentFromTemplate(name: string, templateURL: string) {
-        let pascalCase = name[0].toUpperCase() + name.substring(1, name.length);
+        let pascalCase = Utils.firstToUpperCase(name);
         const litElementTemplate = fs.readFileSync(path.join(__dirname, templateURL), {encoding: "utf-8"});
         const litElementComponent = litElementTemplate.replace(/%%PascalCase%%/g, pascalCase);
         return litElementComponent.replace(/%%kebap-case%%/g, name.toLowerCase());

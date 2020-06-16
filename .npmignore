@@ -1,0 +1,12 @@
+# Ignore source files
+src/
+
+# Ignore test files
+test/
+
+# Ignore any configuration files, specifically development stuff like webpack and compiling settings
+*.config.js
+tsconfig.json
+
+# Ignore IDE/editor specific configuration files
+.vscode
