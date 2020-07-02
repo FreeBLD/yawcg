@@ -23,4 +23,6 @@ It is recommended to compile the source before first time usage.
 ## ShortTerm
 
 - add the templates for default configuration files to app generating methods
-- finish creat new app functionality
+- fix new app functionality.
+    * rename extracted repo.
+    * remove zip files and working dir.
