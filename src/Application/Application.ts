@@ -5,6 +5,7 @@ import MochaTestCaseTemplate from '../templates/typescript/MochaTestCaseTemplate
 import Utils from '../Utils/Utils';
 import ConfigTemplates from '../templates/config/ConfigTemplates';
 import https from 'https';
+import { FetchRemoteRepository } from '../FetchRemoteRepository/FetchRemoteRepository';
 
 export class Application {
 
@@ -29,13 +30,16 @@ export class Application {
         this.createConfigurationFiles(testFolderPath);
     }
 
+    static createNewApplicationFromRepo() {
+        this.fetchTemplateProjectFromRepo();
+    }
+
     static fetchTemplateProjectFromRepo() {
-        https.get('https://github.com/FreeBLD/lit-element-template/archive/typescript.zip', (res) => {
-            console.log(res);
-            const repo = res.on('data', (payload) => {
-                console.log(payload);
-                return payload;
-            });
+        const REPOREDIRECTLINK = 'https://codeload.github.com/FreeBLD/lit-element-template/zip/master';
+        const repoFetcher = new FetchRemoteRepository(REPOREDIRECTLINK);
+        repoFetcher.getRepo().then((path: string) => {
+            console.log(path);
+            if(path.includes('.zip')) repoFetcher.extractArchive(path);
         });
     }
 

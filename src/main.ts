@@ -10,7 +10,8 @@ if (cliArgs.length < 3) {
     switch(cliArgs[2]) {
         case 'new':
             if (cliArgs[3] === 'app') {
-                app.createNewApplication(cliArgs[4]);
+                //app.createNewApplication(cliArgs[4]);
+                app.createNewApplicationFromRepo();
             } else if (cliArgs[3] === 'component') {
                 app.createNewComponent(cliArgs[4], cliArgs[5]);
             }
