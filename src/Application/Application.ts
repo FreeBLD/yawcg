@@ -41,6 +41,7 @@ export class Application {
             if (pathToFile.includes('.zip')) {
                 repoFetcher.extractArchive(pathToFile, process.cwd()).then(() => {
                     repoFetcher.deleteFile(pathToFile);
+                    // Rename here template repo after extraction.
                 });
             }
         });
