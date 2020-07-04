@@ -4,7 +4,6 @@ import LitElementTemplate from '../templates/typescript/LitElementTemplate';
 import MochaTestCaseTemplate from '../templates/typescript/MochaTestCaseTemplate';
 import Utils from '../Utils/Utils';
 import ConfigTemplates from '../templates/config/ConfigTemplates';
-import https from 'https';
 import { FetchRemoteRepository } from '../FetchRemoteRepository/FetchRemoteRepository';
 
 export class Application {
@@ -37,9 +36,13 @@ export class Application {
     static fetchTemplateProjectFromRepo() {
         const REPOREDIRECTLINK = 'https://codeload.github.com/FreeBLD/lit-element-template/zip/master';
         const repoFetcher = new FetchRemoteRepository(REPOREDIRECTLINK);
-        repoFetcher.getRepo().then((path: string) => {
-            console.log(path);
-            if(path.includes('.zip')) repoFetcher.extractArchive(path);
+        repoFetcher.getRepo(process.cwd()).then((pathToFile: string) => {
+            //Should create a working dir for archives and unarchived directories that are cleaned after all operations
+            if (pathToFile.includes('.zip')) {
+                repoFetcher.extractArchive(pathToFile, process.cwd()).then(() => {
+                    repoFetcher.deleteFile(pathToFile);
+                });
+            }
         });
     }
 

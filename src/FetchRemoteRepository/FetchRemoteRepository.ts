@@ -2,7 +2,9 @@ const https = require('https');
 const fs = require('fs');
 const extract = require('extract-zip');
 
-const REPOLINK = 'https://github.com/FreeBLD/lit-element-template/archive/master.zip';
+//import * as fs from 'fs';
+//import * as https from 'https';
+//import * as extract from 'extract-zip';
 
 // Needs unit tests :(
 export class FetchRemoteRepository {
@@ -13,6 +15,7 @@ export class FetchRemoteRepository {
 	}
 
 	set RepositoryLink(url: string) {
+		const validURI = new RegExp(/^\w{,5}:\/\/\w+\.\w{,3}/, "i"); //Is this a valid URI parser? Non-functional
 		this.repoLink = url;
 	}
 
@@ -31,10 +34,13 @@ export class FetchRemoteRepository {
 		});
 	}
 
-	getRepo(target?: string) {
+	getRepo(target?: string): Promise<string> {
+		const currentISODate = new Date().toISOString();
+		const archiveName = `repo${currentISODate}.zip`;
 		if (target === undefined) {
-			const currentISODate = new Date().toISOString();
-			target = `${__dirname}/repo${currentISODate}.zip`
+			target = `${__dirname}/${archiveName}`;
+		} else {
+			target = `${target}/${archiveName}`;
 		}
 		return new Promise((resolve, reject) => {
 			https.get(this.repoLink, (stream: any) => {
@@ -46,12 +52,11 @@ export class FetchRemoteRepository {
 		});
 	}
 
-	private saveStreamToFile(stream: any, destination: string) {
+	private saveStreamToFile(stream: any, destination: string): Promise<string> {
 		const file = fs.createWriteStream(destination);
 		stream.pipe(file);
 		return new Promise((resolve, reject) => {
 			file.on("finish", () => {
-				console.log(destination);
 				file.close(resolve(destination));
 			});
 			file.on("error", (error: any) => {
@@ -60,13 +65,23 @@ export class FetchRemoteRepository {
 		});
 	}
 
-	extractArchive(pathToFile: string) {
-		extract(pathToFile, { dir: `${__dirname}/repo` })
-			.then((err: any, data: any) => {
-				console.log("Archive Extracted!");
-			})
-			.catch((error: any) => {
-				throw new Error(`Error ${error}`);
-			});
+	//Should this be spun out to a separate class?! Probably!
+	extractArchive(pathToFile: string, destination: string): Promise<any> {
+		return new Promise((resolve, reject) => {
+			extract(pathToFile, { dir: `${destination}` })
+				.then((data: any) => {
+					console.log("Archive Extracted!");
+					resolve(data);
+				})
+				.catch((error: any) => {
+					reject(error);
+				});
+		});
+	}
+
+	deleteFile(filePath: string) {
+		fs.unlink(filePath, () => {
+			console.log(`Successfully deleted ${filePath}`)
+		});
 	}
 }
