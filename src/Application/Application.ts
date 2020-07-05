@@ -29,18 +29,19 @@ export class Application {
         this.createConfigurationFiles(testFolderPath);
     }
 
-    static createNewApplicationFromRepo() {
-        this.fetchTemplateProjectFromRepo();
+    static createNewApplicationFromRepo(appName: string) {
+        this.fetchTemplateProjectFromRepo(appName);
     }
 
-    static fetchTemplateProjectFromRepo() {
+    static fetchTemplateProjectFromRepo(appName: string) {
         const REPOREDIRECTLINK = 'https://codeload.github.com/FreeBLD/lit-element-template/zip/master';
         const repoFetcher = new FetchRemoteRepository(REPOREDIRECTLINK);
         repoFetcher.getRepo(process.cwd()).then((pathToFile: string) => {
             //Should create a working dir for archives and unarchived directories that are cleaned after all operations
             if (pathToFile.includes('.zip')) {
-                repoFetcher.extractArchive(pathToFile, process.cwd()).then(() => {
+                repoFetcher.extractArchive(pathToFile, process.cwd()).then((whatIsThis) => {
                     repoFetcher.deleteFile(pathToFile);
+                    console.log(whatIsThis);
                     // Rename here template repo after extraction.
                 });
             }

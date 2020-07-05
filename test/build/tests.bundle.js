@@ -95,6 +95,7 @@
 
 var map = {
 	"./Application/Application.test.ts": "./src/Application/Application.test.ts",
+	"./FetchRemoteRepository/FetchRemoteRepository.test.ts": "./src/FetchRemoteRepository/FetchRemoteRepository.test.ts",
 	"./Utils/Utils.test.ts": "./src/Utils/Utils.test.ts"
 };
 
@@ -268,7 +269,7 @@ const LitElementTemplate_1 = __importDefault(__webpack_require__(/*! ../template
 const MochaTestCaseTemplate_1 = __importDefault(__webpack_require__(/*! ../templates/typescript/MochaTestCaseTemplate */ "./src/templates/typescript/MochaTestCaseTemplate.ts"));
 const Utils_2 = __importDefault(__webpack_require__(/*! ../Utils/Utils */ "./src/Utils/Utils.ts"));
 const ConfigTemplates_1 = __importDefault(__webpack_require__(/*! ../templates/config/ConfigTemplates */ "./src/templates/config/ConfigTemplates.ts"));
-const https_1 = __importDefault(__webpack_require__(/*! https */ "https"));
+const FetchRemoteRepository_2 = __webpack_require__(/*! ../FetchRemoteRepository/FetchRemoteRepository */ "./src/FetchRemoteRepository/FetchRemoteRepository.ts");
 class Application {
     constructor(name) {
         this._name = name;
@@ -287,13 +288,21 @@ class Application {
         const testFolderPath = path.resolve('./', `${name}`, `test/`);
         this.createConfigurationFiles(testFolderPath);
     }
-    static fetchTemplateProjectFromRepo() {
-        https_1.default.get('https://github.com/FreeBLD/lit-element-template/archive/typescript.zip', (res) => {
-            console.log(res);
-            const repo = res.on('data', (payload) => {
-                console.log(payload);
-                return payload;
-            });
+    static createNewApplicationFromRepo(appName) {
+        this.fetchTemplateProjectFromRepo(appName);
+    }
+    static fetchTemplateProjectFromRepo(appName) {
+        const REPOREDIRECTLINK = 'https://codeload.github.com/FreeBLD/lit-element-template/zip/master';
+        const repoFetcher = new FetchRemoteRepository_2.FetchRemoteRepository(REPOREDIRECTLINK);
+        repoFetcher.getRepo(process.cwd()).then((pathToFile) => {
+            //Should create a working dir for archives and unarchived directories that are cleaned after all operations
+            if (pathToFile.includes('.zip')) {
+                repoFetcher.extractArchive(pathToFile, process.cwd()).then((whatIsThis) => {
+                    repoFetcher.deleteFile(pathToFile);
+                    console.log(whatIsThis);
+                    // Rename here template repo after extraction.
+                });
+            }
         });
     }
     static createConfigurationFiles(path) {
@@ -353,6 +362,148 @@ class Application {
     }
 }
 exports.Application = Application;
+
+
+/***/ }),
+
+/***/ "./src/FetchRemoteRepository/FetchRemoteRepository.test.ts":
+/*!*****************************************************************!*\
+  !*** ./src/FetchRemoteRepository/FetchRemoteRepository.test.ts ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const FetchRemoteRepository_1 = __webpack_require__(/*! ./FetchRemoteRepository */ "./src/FetchRemoteRepository/FetchRemoteRepository.ts");
+const assert_3 = __importDefault(__webpack_require__(/*! assert */ "assert"));
+const fs_2 = __importDefault(__webpack_require__(/*! fs */ "fs"));
+let fetchRemoteRepository;
+describe('Test Case for FetchRemoteRepositoryClass', () => {
+    const tempPath = './temp';
+    beforeEach(() => {
+        fetchRemoteRepository = new FetchRemoteRepository_1.FetchRemoteRepository();
+    });
+    afterEach(() => {
+        fetchRemoteRepository = null;
+    });
+    describe('FS operations', () => {
+        beforeEach(() => {
+        });
+        afterEach(() => {
+        });
+        it('Should create a folder named "temp"', () => {
+            fs_2.default.mkdirSync(tempPath);
+            assert_3.default.strictEqual(fs_2.default.existsSync('./temp'), true);
+            fs_2.default.rmdirSync('./temp');
+        });
+        it('Should rename "temp" folder to "tenp"', () => {
+            fs_2.default.mkdirSync(tempPath);
+            fs_2.default.renameSync(tempPath, './tenp');
+            assert_3.default.strictEqual(fs_2.default.existsSync('./tenp'), true);
+            fs_2.default.rmdirSync('./tenp');
+        });
+    });
+});
+
+
+/***/ }),
+
+/***/ "./src/FetchRemoteRepository/FetchRemoteRepository.ts":
+/*!************************************************************!*\
+  !*** ./src/FetchRemoteRepository/FetchRemoteRepository.ts ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.FetchRemoteRepository = void 0;
+const fs_3 = __importDefault(__webpack_require__(/*! fs */ "fs"));
+const https_1 = __importDefault(__webpack_require__(/*! https */ "https"));
+const extract_zip_1 = __importDefault(__webpack_require__(/*! extract-zip */ "extract-zip"));
+// Needs unit tests :(
+class FetchRemoteRepository {
+    constructor(repositoryLink) {
+        this.repoLink = repositoryLink;
+    }
+    set RepositoryLink(url) {
+        const validURI = new RegExp(/^\w{,5}:\/\/\w+\.\w{,3}/, "i"); //Is this a valid URI parser? Non-functional
+        this.repoLink = url;
+    }
+    getFileFromURL(url, target) {
+        if (target === null) {
+            const currentISODate = new Date().toISOString();
+            target = `${__dirname}/repo${currentISODate}.zip`;
+        }
+        return new Promise((resolve, reject) => {
+            https_1.default.get(url, (stream) => {
+                this.saveStreamToFile(stream, target).then((path) => {
+                    console.log(`File Successfully Saved on ${path}`);
+                    resolve(path);
+                });
+            });
+        });
+    }
+    getRepo(target) {
+        const currentISODate = new Date().toISOString();
+        const archiveName = `repo${currentISODate}.zip`;
+        if (target === undefined) {
+            target = `${__dirname}/${archiveName}`;
+        }
+        else {
+            target = `${target}/${archiveName}`;
+        }
+        return new Promise((resolve, reject) => {
+            https_1.default.get(this.repoLink, (stream) => {
+                this.saveStreamToFile(stream, target).then((path) => {
+                    console.log(`File Successfully Saved on ${path}`);
+                    resolve(path);
+                });
+            });
+        });
+    }
+    saveStreamToFile(stream, destination) {
+        const file = fs_3.default.createWriteStream(destination);
+        stream.pipe(file);
+        return new Promise((resolve, reject) => {
+            file.on("finish", () => {
+                file.close();
+                resolve(destination);
+            });
+            file.on("error", (error) => {
+                reject(error);
+            });
+        });
+    }
+    //Should this be spun out to a separate class?! Probably!
+    extractArchive(pathToFile, destination) {
+        return new Promise((resolve, reject) => {
+            extract_zip_1.default(pathToFile, { dir: `${destination}` })
+                .then((data) => {
+                console.log("Archive Extracted!");
+                resolve(destination);
+            })
+                .catch((error) => {
+                reject(error);
+            });
+        });
+    }
+    deleteFile(filePath) {
+        fs_3.default.unlink(filePath, () => {
+            console.log(`Successfully deleted temp archive ${filePath}`);
+        });
+    }
+}
+exports.FetchRemoteRepository = FetchRemoteRepository;
 
 
 /***/ }),
@@ -797,6 +948,17 @@ module.exports = tests;
 /***/ (function(module, exports) {
 
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ "extract-zip":
+/*!******************************!*\
+  !*** external "extract-zip" ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("extract-zip");
 
 /***/ }),
 

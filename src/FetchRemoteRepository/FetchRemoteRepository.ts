@@ -1,10 +1,6 @@
-const https = require('https');
-const fs = require('fs');
-const extract = require('extract-zip');
-
-//import * as fs from 'fs';
-//import * as https from 'https';
-//import * as extract from 'extract-zip';
+import fs from 'fs';
+import https from 'https';
+import extract from 'extract-zip';
 
 // Needs unit tests :(
 export class FetchRemoteRepository {
@@ -57,7 +53,8 @@ export class FetchRemoteRepository {
 		stream.pipe(file);
 		return new Promise((resolve, reject) => {
 			file.on("finish", () => {
-				file.close(resolve(destination));
+				file.close();
+				resolve(destination);
 			});
 			file.on("error", (error: any) => {
 				reject(error);
@@ -71,7 +68,7 @@ export class FetchRemoteRepository {
 			extract(pathToFile, { dir: `${destination}` })
 				.then((data: any) => {
 					console.log("Archive Extracted!");
-					resolve(data);
+					resolve(destination);
 				})
 				.catch((error: any) => {
 					reject(error);
@@ -81,7 +78,7 @@ export class FetchRemoteRepository {
 
 	deleteFile(filePath: string) {
 		fs.unlink(filePath, () => {
-			console.log(`Successfully deleted ${filePath}`)
+			console.log(`Successfully deleted temp archive ${filePath}`)
 		});
 	}
 }
