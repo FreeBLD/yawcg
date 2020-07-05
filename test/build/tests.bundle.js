@@ -218,11 +218,12 @@ describe("Test Case for the Application Class", () => {
         Application_1.Application.createNewComponent('baz');
         console.log(__dirname);
         console.log(process.cwd());
-        const folderIsCreated = fs_1.default.existsSync(path_1.default.resolve(process.cwd(), 'baz'));
+        const folderIsCreated = fs_1.default.existsSync(path_1.default.resolve(process.cwd(), 'baz-element'));
         assert_1.default.strictEqual(folderIsCreated, true);
+        fs_1.default.rmdirSync(path_1.default.resolve(process.cwd(), 'baz-element'), { recursive: true });
     });
     it('should fetch the template repo from upstream', () => __awaiter(void 0, void 0, void 0, function* () {
-        const repo = yield Application_1.Application.fetchTemplateProjectFromRepo();
+        const repo = yield Application_1.Application.fetchTemplateProjectFromRepo('Test');
         assert_1.default.notStrictEqual(repo, null);
     }));
 });
@@ -380,7 +381,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const FetchRemoteRepository_1 = __webpack_require__(/*! ./FetchRemoteRepository */ "./src/FetchRemoteRepository/FetchRemoteRepository.ts");
-const assert_3 = __importDefault(__webpack_require__(/*! assert */ "assert"));
+const assert_2 = __importDefault(__webpack_require__(/*! assert */ "assert"));
 const fs_2 = __importDefault(__webpack_require__(/*! fs */ "fs"));
 let fetchRemoteRepository;
 describe('Test Case for FetchRemoteRepositoryClass', () => {
@@ -398,13 +399,13 @@ describe('Test Case for FetchRemoteRepositoryClass', () => {
         });
         it('Should create a folder named "temp"', () => {
             fs_2.default.mkdirSync(tempPath);
-            assert_3.default.strictEqual(fs_2.default.existsSync('./temp'), true);
+            assert_2.default.strictEqual(fs_2.default.existsSync('./temp'), true);
             fs_2.default.rmdirSync('./temp');
         });
         it('Should rename "temp" folder to "tenp"', () => {
             fs_2.default.mkdirSync(tempPath);
             fs_2.default.renameSync(tempPath, './tenp');
-            assert_3.default.strictEqual(fs_2.default.existsSync('./tenp'), true);
+            assert_2.default.strictEqual(fs_2.default.existsSync('./tenp'), true);
             fs_2.default.rmdirSync('./tenp');
         });
     });
@@ -522,31 +523,31 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Utils_1 = __importDefault(__webpack_require__(/*! ./Utils */ "./src/Utils/Utils.ts"));
-const assert_2 = __importDefault(__webpack_require__(/*! assert */ "assert"));
+const assert_3 = __importDefault(__webpack_require__(/*! assert */ "assert"));
 describe('Test Case for the Utils Class', () => {
     it("firstToLowerCase() should return first 'Test' as 'test'", () => {
-        assert_2.default.strictEqual(Utils_1.default.firstToLowerCase("Test"), 'test');
+        assert_3.default.strictEqual(Utils_1.default.firstToLowerCase("Test"), 'test');
     });
     it("firstToUppercase() should return first letter in 'test as 'Test'", () => {
-        assert_2.default.strictEqual(Utils_1.default.firstToUpperCase('test'), 'Test');
+        assert_3.default.strictEqual(Utils_1.default.firstToUpperCase('test'), 'Test');
     });
     it("trimComponentName() should strip any string containing 'component' token", () => {
-        assert_2.default.strictEqual(Utils_1.default.trimComponentName("UtilsComponent"), "Utils");
+        assert_3.default.strictEqual(Utils_1.default.trimComponentName("UtilsComponent"), "Utils");
     });
     it("trimComponentName() should strip any string containing 'element' token", () => {
-        assert_2.default.strictEqual(Utils_1.default.trimComponentName("UtilsElement"), "Utils");
+        assert_3.default.strictEqual(Utils_1.default.trimComponentName("UtilsElement"), "Utils");
     });
     it("trimComponentName() should strip any string containing any number of 'element' token", () => {
-        assert_2.default.strictEqual(Utils_1.default.trimComponentName("UtilsElementElement"), "Utils");
+        assert_3.default.strictEqual(Utils_1.default.trimComponentName("UtilsElementElement"), "Utils");
     });
     it("convertToKebapCase() should return a 'PascalCase' string with a hyphen token", () => {
-        assert_2.default.strictEqual(Utils_1.default.convertToKebapCase('PascalCase'), 'pascal-case');
+        assert_3.default.strictEqual(Utils_1.default.convertToKebapCase('PascalCase'), 'pascal-case');
     });
     it("convertToKebapCase() should return a 'camelCase' string with a hyphen token", () => {
-        assert_2.default.strictEqual(Utils_1.default.convertToKebapCase('camelCase'), 'camel-case');
+        assert_3.default.strictEqual(Utils_1.default.convertToKebapCase('camelCase'), 'camel-case');
     });
     it("convertToSnakeCase() should return a 'camelCase' string with and an underscore separator token", () => {
-        assert_2.default.strictEqual(Utils_1.default.convertToSnakeCase('camelCase'), 'camel_case');
+        assert_3.default.strictEqual(Utils_1.default.convertToSnakeCase('camelCase'), 'camel_case');
     });
 });
 

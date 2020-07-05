@@ -70,12 +70,13 @@ describe("Test Case for the Application Class", () => {
         Application.createNewComponent('baz');
         console.log(__dirname);
         console.log(process.cwd());
-        const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'baz'));
+        const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'baz-element'));
         assert.strictEqual(folderIsCreated, true);
+        fs.rmdirSync(path.resolve(process.cwd(), 'baz-element'), {recursive: true});
     });
 
     it('should fetch the template repo from upstream', async() => {
-        const repo = await Application.fetchTemplateProjectFromRepo();
+        const repo = await Application.fetchTemplateProjectFromRepo('Test');
         assert.notStrictEqual(repo, null);
     });
 });
