@@ -7,8 +7,8 @@
     "dev": "webpack --env.mode development",
     "prod": "webpack --env.mode production",
     "test": "webpack-dev-server --env.mode development --config ./test/test.config.js",
-    "testCompile": "webpack --watch --progress --env.mode development --config ./test/test.config.js",
-    "testCI": "webpack --env.mode development --config ./test/test.config.js"
+    "live-test": "webpack --watch --progress --env.mode development --config ./test/test.config.js",
+    "testCI": "webpack --env.mode production --config ./test/test.config.js"
   },
   "repository": {
     "type": "git",
@@ -28,8 +28,10 @@
   "author": "Cristian Pogolsha",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
     "@types/node": "^14.0.6",
+    "chai": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
     "extract-zip": "^2.0.1",
     "mocha": "^7.2.0",

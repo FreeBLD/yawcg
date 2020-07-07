@@ -1,19 +1,19 @@
 import { Help as help }  from './Help/Help';
 import { Application as app } from './Application/Application';
 
-const cliArgs = process.argv;
-console.log(__dirname);
+const argv = process.argv;
+const argc = argv.length;
 
-if (cliArgs.length < 3) {
+if (argc < 3 || argc > 5) {
     console.log(help.displayHelp());
 } else {
-    switch(cliArgs[2]) {
+    switch(argv[2]) {
         case 'new':
-            if (cliArgs[3] === 'app') {
+            if (argv[3] === 'app') {
                 //app.createNewApplication(cliArgs[4]);
-                app.createNewApplicationFromRepo();
-            } else if (cliArgs[3] === 'component') {
-                app.createNewComponent(cliArgs[4], cliArgs[5]);
+                app.createNewApplicationFromRepo(argv[4]);
+            } else if (argv[3] === 'component') {
+                app.createNewComponent(argv[4], argv[5]);
             }
         break;
         default:
