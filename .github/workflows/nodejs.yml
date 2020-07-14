@@ -1,6 +1,9 @@
 name: Node CI
 
-on: [push]
+#on: [push]
+on:
+  release:
+    types: [created]
 
 jobs: 
   build:
@@ -24,3 +27,34 @@ jobs:
         npm run testCI
       env:
         CI: true
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 12
+          registry-url: https://registry.npmjs.org/
+          scope: '@cpa30'
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
+
+  publish-gpr:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+          registry-url: https://npm.pkg.github.com/
+          scope: '@FreeBLD'
+      - run: npm ci
+      - run: echo registry=https://npm.pkg.github.com/freebld >> .npmrc
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: {{secrets["PUBLISH_GITHUB_TOKEN"]}} 
