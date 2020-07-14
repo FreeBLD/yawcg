@@ -25,4 +25,4 @@ It is recommended to compile the source before first time usage.
 - add the templates for default configuration files to app generating methods
 - fix new app functionality.
     * rename extracted repo.
-    * remove zip files and working dir.
+    * <strike>remove zip files and working dir.</strike>
