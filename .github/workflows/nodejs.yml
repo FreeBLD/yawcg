@@ -4,6 +4,7 @@ on:
   types: [created]
   jobs: 
     build:
+      name: build
       runs-on: ubuntu-latest
       strategy:
         matrix:
@@ -23,6 +24,7 @@ on:
           CI: true
 
     publish-npm:
+      name: publish-npm
       needs: build
       runs-on: ubuntu-latest
       steps:
@@ -37,7 +39,8 @@ on:
           env:
             NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
 
-    publish-gpr:
+    publish-github:
+      name: publish-github
       needs: build
       runs-on: ubuntu-latest
       steps:
