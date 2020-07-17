@@ -2,7 +2,6 @@ name: Node CI
 
 on: 
   push:
-
     jobs: 
       build:
 
@@ -28,7 +27,6 @@ on:
 
   release:
     types: [created]
-
     jobs: 
       build:
 
