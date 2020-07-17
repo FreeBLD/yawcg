@@ -1,8 +1,5 @@
 name: Node CI
-
 on:
-
-
   release:
     types: [created]
     jobs: 
