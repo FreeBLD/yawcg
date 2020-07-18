@@ -4,6 +4,9 @@ on:
     types: [created]
     env:
       PUBLISH: true
+  push:
+    env:
+      PUBLISH: false
 jobs: 
   build:
     name: build
