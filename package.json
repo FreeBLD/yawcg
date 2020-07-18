@@ -1,6 +1,6 @@
 {
   "name": "yaleg",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Yet Another litElement Generator",
   "main": "yaleg.js",
   "scripts": {
