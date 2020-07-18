@@ -30,7 +30,8 @@ jobs:
 
   publish-npm:
     name: publish-npm
-    needs: [build, ${{ env.PUBLISH == true }}]
+    needs: build
+    if: env.PUBLISH == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
@@ -46,7 +47,8 @@ jobs:
 
   publish-github:
     name: publish-github
-    needs: [build, ${{ env.PUBLISH == true }}]
+    needs: build
+    if: env.PUBLISH == true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
