@@ -41,7 +41,8 @@ jobs:
           registry-url: https://registry.npmjs.org/
           scope: '@cpa30'
       - run: npm ci
-      - run: echo "@cpa30:registry=https://registry.npmjs.org" >> .npmrc
+      - run: npm config set registry https://registry.npmjs.org/
+      - run: cat .npmrc
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: secrets.NPM_PUBLISH_TOKEN
@@ -59,7 +60,8 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@freebld'
       - run: npm ci
-      - run: echo "@freebld:registry=https://npm.pkg.github.com" >> .npmrc
+      #- run: echo "@freebld:registry=https://npm.pkg.github.com" >> .npmrc
+      - run: npm config set registry https://npm.pkg.github.com/
       - run: cat .npmrc
       - run: npm publish
         env:
