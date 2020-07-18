@@ -1,6 +1,6 @@
 {
   "name": "@freebld/yaleg",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Yet Another litElement Generator",
   "main": "yaleg.js",
   "scripts": {
