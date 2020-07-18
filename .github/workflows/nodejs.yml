@@ -39,7 +39,6 @@ jobs:
         with:
           node-version: 12
           registry-url: https://registry.npmjs.org/
-          scope: '@cpa30'
       - run: npm ci
       - run: cat .npmrc
       - run: npm publish --access public
