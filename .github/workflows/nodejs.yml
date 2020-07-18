@@ -29,8 +29,8 @@ jobs:
         CI: true
 
   publish-npm:
-    if: ${{ env.PUBLISH == true }}
     name: publish-npm
+    if: ${{ env.PUBLISH == true }}
     needs: build
     runs-on: ubuntu-latest
     steps:
@@ -46,8 +46,8 @@ jobs:
           NODE_AUTH_TOKEN: ${{secrets.NPM_PUBLISH_TOKEN}}
 
   publish-github:
-    if: ${{ env.PUBLISH == true }}
     name: publish-github
+    if: ${{ env.PUBLISH == true }}
     needs: build
     runs-on: ubuntu-latest
     steps:
