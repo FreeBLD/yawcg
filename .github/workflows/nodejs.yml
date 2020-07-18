@@ -58,7 +58,7 @@ jobs:
           registry-url: https://npm.pkg.github.com/
           scope: '@freebld'
       - run: npm ci
-      - run: echo "registry=https://npm.pkg.github.com/freebld" >> .npmrc
+      - run: echo "@freebld:registry=https://npm.pkg.github.com" >> .npmrc
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: secrets.TOKEN_PUBLISH_GITHUB
