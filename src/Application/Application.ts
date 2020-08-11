@@ -59,14 +59,14 @@ export class Application {
 
     static createNewComponent(name: string, pathToComponent?: string) {
         let trimmedName = Utils.trimComponentName(name);
-        const newFileName = `${trimmedName.toLowerCase()}-element`;
+        const newFileName = `${Utils.convertToKebapCase(trimmedName)}-element`;
         pathToComponent = !!pathToComponent ? pathToComponent : process.cwd();
         const newFolderName = path.resolve(pathToComponent, newFileName);
         console.log(`Created New Folder ${newFolderName}`);
         fs.mkdirSync(newFolderName, {recursive: true});
         console.log(`Created New Element ${newFolderName}/${newFileName}.ts`);
         fs.writeFileSync(`${newFolderName}/${newFileName}.ts`, this.generateNewComponent(trimmedName));
-        console.log(`Created New Test ${newFolderName}/${newFileName}.ts`);
+        console.log(`Created New Test ${newFolderName}/${newFileName}.test.ts`);
         fs.writeFileSync(`${newFolderName}/${newFileName}.test.ts`, this.generateNewTestCase(trimmedName));
     }
 

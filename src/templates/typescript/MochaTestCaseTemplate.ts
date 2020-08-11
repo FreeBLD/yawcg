@@ -5,13 +5,12 @@ class MochaTestCaseTemplate {
             import * as assert from 'assert';
 
             let %%camelCase%%: %%PascalCase%%Element;
-            let shadow: shadowRoot;
+            let shadow: ShadowRoot;
 
             describe("Test Case for the %%PascalCase%%Element Class", () => {
                 beforeEach(() => {
                     %%camelCase%% = new %%PascalCase%%Element();
                     document.body.appendChild(%%camelCase%%);
-                    shadow = %%camelCase%%.shadowRoot;
                 });
 
                 afterEach(() => {
@@ -20,15 +19,17 @@ class MochaTestCaseTemplate {
                 });
 
                 it("%%camelCase%% has a property 'name' with value of '%%PascalCase%%'", function() {
-                    assert.equal(%%camelCase%%.name, '%%PascalCase%%');
+                    assert.strictEqual(%%camelCase%%.name, '%%PascalCase%%Element');
                 });
 
-                it("%%camelCase%% has a 'color' red applied to its children", function() {
-                    const host = window.getComputedStyle(%%camelCase%%, ':host');
-                    const color = host.getPropertyValue('color');
-                    assert.equal(%%camelCase%%, color);
+                it("%%camelCase%% should have a child Node 'h1' inside the shadow DOM after it is updated, function() {
+                    %%camelCase%%.updateComplete().then(() => {
+                        shadow = %%camelCase%%.shadowRoot; 
+                        const h1 = shadow.querySelectorAll('h1');
+                        assert.strictEqual(h1.length, 1);
+                    });
                 });
-            })
+            });
         `;
     }
 }

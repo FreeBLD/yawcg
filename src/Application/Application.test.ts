@@ -10,16 +10,9 @@ let foobarClassTemplate: string = `
 
     @customElement('foobar-element')
     export class FoobarElement extends LitElement {
-        private _name: string;
 
-        @property({ type: String }) public get name() {
-            return this._name;
-        } 
-        public set name(value: string) {
-            const oldValue = this.name;
-            this._name = value;
-            this.requestUpdate('name', oldValue)
-        }
+        @property({ type: String })
+        name: string;
         
         constructor() {
             super();
@@ -28,23 +21,14 @@ let foobarClassTemplate: string = `
 
         render() {
             return html\`
-                <h1>\${this.name} <span class=".blink">Works!</span></h1>
+                <h1>\${this.name} Works!</h1>
             \`;
         }
         
         static get styles() {
             const style = css\`
                 :host {
-                    color: red;
-                    // create a blink css property
-                }
-                @keyframes blink {
-                    from { color: red; }
-                    to { color: white; }
-                }
-                .blink {
-                    animation-name: blink;
-                    animation-duration: 2s;
+                    display: block;
                 }
             \`;
             return [style];
@@ -90,6 +74,13 @@ describe("Test Case for the Application Class", () => {
         const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'baz-element'));
         assert.strictEqual(folderIsCreated, true);
         fs.rmdirSync(path.resolve(process.cwd(), 'baz-element'), {recursive: true});
+    });
+
+    it("should create a folder with a new component called 'AboutUs' saved as 'about-us-element'", () => {
+        Application.createNewComponent('AboutUs');
+        const folderIsCreated: boolean = fs.existsSync(path.resolve(process.cwd(), 'about-us-element'));
+        assert.strictEqual(folderIsCreated, true);
+        fs.rmdirSync(path.resolve(process.cwd(), 'about-us-element'), {recursive: true});
     });
 
     xit('should fetch the template repo from upstream', async() => {
