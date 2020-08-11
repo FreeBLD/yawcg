@@ -22,8 +22,8 @@ class MochaTestCaseTemplate {
                     assert.strictEqual(%%camelCase%%.name, '%%PascalCase%%Element');
                 });
 
-                it("%%camelCase%% should have a child Node 'h1' inside the shadow DOM after it is updated, function() {
-                    %%camelCase%%.updateComplete().then(() => {
+                it("%%camelCase%% should have a child Node 'h1' inside the shadow DOM after it is updated", function() {
+                    %%camelCase%%.updateComplete.then(() => {
                         shadow = %%camelCase%%.shadowRoot; 
                         const h1 = shadow.querySelectorAll('h1');
                         assert.strictEqual(h1.length, 1);
